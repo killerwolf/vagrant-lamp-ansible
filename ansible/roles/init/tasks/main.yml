@@ -1,0 +1,17 @@
+---
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: Set server local
+  command: "echo \"Europe/Paris\" | sudo tee /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata"
+
+- name: Install System Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items: ["curl","wget","python-software-properties"]
+
+- name: Install Extra Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items: ["git","vim","pv","htop", "imagemagick"]
