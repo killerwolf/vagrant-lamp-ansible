@@ -1,0 +1,9 @@
+---
+- name: lbserver
+  ip: 192.168.121.101
+
+- name: webserver
+  ip: 192.168.121.102
+
+- name: dbserver
+  ip: 192.168.121.103
