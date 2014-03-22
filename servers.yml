@@ -1,9 +1,20 @@
 ---
 - name: lbserver
   ip: 192.168.121.101
+  memory: 256
+  group: lb
 
-- name: webserver
+- name: webserver01
   ip: 192.168.121.102
+  memory: 512
+  group: web
+
+- name: webserver02
+  ip: 192.168.121.102
+  memory: 512
+  group: web
 
 - name: dbserver
   ip: 192.168.121.103
+  memory: 512
+  group: db
