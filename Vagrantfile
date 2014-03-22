@@ -21,6 +21,12 @@ Vagrant.configure("2") do |config|
           serv.vm.network "private_network", ip: servers["ip"]
           serv.vm.provision "ansible" do |ansible|
               ansible.playbook = "ansible/playbook.yml"
+              ansible.groups = {
+                "lb" => ["lbserver"],
+                "web" => ["webserver01", "webserver02"],
+                "db" => ["dbserver"],
+                "all_groups:children" => ["web", "lb", "db"]
+                }
           end
       end 
   end
