@@ -12,6 +12,11 @@ Vagrant.configure("2") do |config|
 
   servers.each do |servers|
       config.vm.define servers["name"] do |serv|
+          serv.vm.provider :virtualbox do |v|
+            v.customize ["modifyvm", :id, "--memory", servers["memory"]]
+            v.customize ["modifyvm", :id, "--name", servers["name"]]
+          end
+
           serv.vm.hostname = servers["name"]
           serv.vm.network "private_network", ip: servers["ip"]
           serv.vm.provision "ansible" do |ansible|
