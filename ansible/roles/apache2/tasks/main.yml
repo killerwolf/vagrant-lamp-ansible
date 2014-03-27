@@ -1,0 +1,32 @@
+---
+- name: Install Apache
+  sudo: yes
+  apt: pkg=apache2-mpm-prefork state=latest
+
+- name: Install Apache Modules
+  shell: a2enmod {{ item }}
+  notify: restart apache
+  with_items:
+    - rewrite
+    - vhost_alias
+    - headers
+    - expires
+    - filter
+    - php5
+
+- name: Change default apache user
+  sudo: yes
+  lineinfile: dest=/etc/apache2/envvars regexp=APACHE_RUN_USER line="export APACHE_RUN_USER=vagrant"
+
+- name: Change default apache group
+  sudo: yes
+  lineinfile: dest=/etc/apache2/envvars regexp=APACHE_RUN_GROUP line="export APACHE_RUN_GROUP=vagrant"
+
+- name: Change lock file owner
+  sudo: yes
+  file: path=/var/lock/apache2 owner=vagrant group=vagrant
+
+- name: Change default apache site
+  sudo: yes
+  template: src=vhost.conf.tpl dest=/etc/apache2/sites-available/default
+  notify: restart apache
