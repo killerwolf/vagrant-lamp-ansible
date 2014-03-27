@@ -1,0 +1,12 @@
+- name: Install package
+  apt: pkg={{ item }} state=installed
+  notify: restart mysql
+  with_items:
+    - python-mysqldb
+    - mysql-server
+
+- name: Create Database
+  mysql_db: name=mydb state=present
+
+- name: Create User
+  mysql_user: name=myuser password=myuser priv=*.*:ALL state=present
