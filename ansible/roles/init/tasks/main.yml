@@ -1,4 +1,10 @@
 ---
+- name: Dump web vars
+  debug: msg="{% for backend in groups['web'] %}{{ hostvars[backend] }}{% endfor %}"
+
+- name: Dump all vars
+  action: template src=dumpall.j2 dest=/tmp/ansible.all
+
 - name: Update apt
   sudo: yes
   apt: update_cache=yes
