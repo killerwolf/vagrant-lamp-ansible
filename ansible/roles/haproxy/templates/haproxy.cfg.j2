@@ -3,16 +3,20 @@ global
     maxconn 256
 
 defaults
+    log global
+    option httplog
+    option dontlognull
     mode http
     timeout connect 5000ms
     timeout client 50000ms
     timeout server 50000ms
 
 listen cluster
+    bind {{ ansible_eth1['ipv4']['address'] }}:80
     mode http
     stats enable
     balance roundrobin
 {% for backend in groups['web'] %}
-    server {{ hostvars[backend]['ansible_hostname'] }} {{ hostvars[backend]['ansible_eth1']['ipv4']['address'] }} check port 80
+    server {{ hostvars[backend]['ansible_hostname'] }} {{ hostvars[backend]['ansible_eth1']['ipv4']['address'] }}
 {% endfor %}
     option httpchk HEAD /index.php HTTP/1.0
