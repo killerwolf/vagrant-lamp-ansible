@@ -1,0 +1,21 @@
+---
+- hosts: all
+  sudo: true
+  roles:
+    - init
+
+- hosts: db
+  sudo: true
+  roles:
+    - mysql
+
+- hosts: lb
+  sudo: true
+  roles:
+    - haproxy
+
+- hosts: web
+  sudo: true
+  roles:
+    - php5
+    - apache2
