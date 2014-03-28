@@ -1,20 +1,24 @@
 ---
-- name: lbserver
-  ip: 192.168.121.101
-  memory: 256
-  group: lb
+- name: dbserver
+  ip: 192.168.121.104
+  port: 2204
+  memory: 512
+  group: db
 
 - name: webserver01
   ip: 192.168.121.102
+  port: 2202
   memory: 512
   group: web
 
 - name: webserver02
-  ip: 192.168.121.102
+  ip: 192.168.121.103
+  port: 2203
   memory: 512
   group: web
 
-- name: dbserver
-  ip: 192.168.121.103
-  memory: 512
-  group: db
+- name: lbserver
+  ip: 192.168.121.101
+  port: 2201
+  memory: 256
+  group: lb
