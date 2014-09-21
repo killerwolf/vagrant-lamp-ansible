@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
         serv.vm.provision "ansible" do |ansible|
           ansible.limit= "all"
           ansible.playbook = "ansible/playbook.main.yml"
-          #ansible inventory should be generated from servers.yml
+          #TODO ansible inventory should be generated from servers.yml
           ansible.groups = {
             "db" => ["dbserver"],
             "lb" => ["lbserver"],
