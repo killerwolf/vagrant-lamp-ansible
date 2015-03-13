@@ -10,25 +10,28 @@ Vagrant.configure("2") do |config|
   config.vm.box = "wheezy64nocm"
   config.vm.box_url = "http://puppet-vagrant-boxes.puppetlabs.com/debian-73-x64-virtualbox-nocm.box"
 
-  servers.each.with_index do |servers, index|
-    config.vm.define servers["name"].to_sym do |serv|
+ ansible.groups = {
+    "all_groups:children" => []
+  }
+  servers.each_with_index do |server, index|
+    config.vm.define server["name"].to_sym do |serv|
       serv.vm.provider :virtualbox do |v|
-        v.customize ["modifyvm", :id, "--memory", servers["memory"]]
-        v.customize ["modifyvm", :id, "--name", servers["name"]]
+        v.customize ["modifyvm", :id, "--memory", server["memory"]]
+        v.customize ["modifyvm", :id, "--name", server["name"]]
       end
-      serv.vm.hostname = servers["name"]
-      serv.vm.network "private_network", ip: servers["ip"]
-      if index == 3
+      serv.vm.hostname = server["name"]
+      serv.vm.network "private_network", ip: server["ip"]
+      
+      if ansible_groups[server['group']].nil?
+        ansible_groups[server['group']] = []
+        ansible_groups["all_groups:children"] << server['group']
+      end
+      ansible_groups[server['group']] << server["name"]
+      
+      if index == servers.size - 1
         serv.vm.provision "ansible" do |ansible|
           ansible.limit= "all"
           ansible.playbook = "ansible/playbook.main.yml"
-          #TODO ansible inventory should be generated from servers.yml
-          ansible.groups = {
-            "db" => ["dbserver"],
-            "lb" => ["lbserver"],
-            "web" => ["webserver01", "webserver02"],
-            "all_groups:children" => ["web", "lb", "db"]
-          }
         end
       end
     end 
